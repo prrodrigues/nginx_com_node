@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0    
+    restart: always
+    tty: true
+    volumes:
+      - ./node/mysql_db:/docker-entrypoint-initdb.d #SETUP
+    environment: 
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root      
+
+  app:
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+    restart: always
+    tty: true
+    depends_on: 
+      - db    
+
+
+  nginx:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on: 
+     - db
+     - app
