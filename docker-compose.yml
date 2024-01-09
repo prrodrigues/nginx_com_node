@@ -17,6 +17,9 @@ services:
       context: ./node
       dockerfile: Dockerfile
     restart: always
+    volumes:
+      - ./node:/usr/src/app #Map Local files to container
+      - /usr/src/app/node_modules #Set where node_modules is located
     tty: true
     depends_on: 
       - db    
